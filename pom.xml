@@ -60,6 +60,11 @@
             <artifactId>guava</artifactId>
             <version>28.2-android</version>
         </dependency>
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient</artifactId>
+            <version>0.16.0</version>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>

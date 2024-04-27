@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class CoinDeskService {
-
     private final CoinDeskApiClient coinDeskApiClient;
     private final AtomicDouble rateBitcoinOfUsd;
 
@@ -23,7 +22,7 @@ public class CoinDeskService {
         meterRegistry.gauge("BTCtoUSD", rateBitcoinOfUsd);
     }
 
-    @CustomAnnotationForMetric(key = "getResponseCoinDesk", type = "start")
+    @CustomAnnotationForMetric(key = "get.custom.metric", type = "end")
     @SneakyThrows
     public ResponseCoinDesk getResponseCoinDesk() {
         ResponseCoinDesk responseCoinDesk = coinDeskApiClient.getResponseCoinDesk();

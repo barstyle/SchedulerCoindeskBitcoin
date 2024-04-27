@@ -31,7 +31,7 @@ public class CoinDeskController {
 
     @GetMapping("time")
     @Timed("get_controller_request_coindesk_response")
-    @CustomAnnotationForMetric(key = "getResponseCoinDesk", type = "end")
+    @CustomAnnotationForMetric(key = "get.custom.metric", type = "start")
     ResponseEntity<String> getTime() {
         log.info("Выполнен запрос getTime() ");
         return new ResponseEntity<>("response coming soon",  HttpStatus.OK);

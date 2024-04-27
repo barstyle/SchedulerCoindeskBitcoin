@@ -1,8 +1,7 @@
 package com.coindesk.schedulercoindeskbitcoin.aspect;
 
-import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -13,21 +12,15 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @Slf4j
-class PrometheusMetricsCollector {
-    private final Timer asyncMethodExecutionTime;
-    private final Counter asyncMethodCounter;
+public class PrometheusMetricsCollector {
+    private final MeterRegistry meterRegistry;
+
+    @Getter
     private final Map<String, LinkedList<Long>> asyncMethodExecutionTimeMap = new HashMap<>();
 
     public PrometheusMetricsCollector(MeterRegistry meterRegistry) {
-        this.asyncMethodExecutionTime = Timer
-                .builder("async_method_execution_time_seconds")
-                .description("async_method_execution_time_seconds")
-                .register(meterRegistry);
 
-        this.asyncMethodCounter = Counter
-                .builder("async_method_counter")
-                .description("async_method_counter")
-                .register(meterRegistry);
+        this.meterRegistry = meterRegistry;
     }
 
     public void startAsyncMethodTimer(String key) {
@@ -43,9 +36,10 @@ class PrometheusMetricsCollector {
         if (timeList != null && !timeList.isEmpty()) {
             long startTime = timeList.removeFirst();
             long endTime = System.currentTimeMillis();
-            long executionTime = (endTime - startTime) ;
-            asyncMethodExecutionTime.record(executionTime, TimeUnit.MILLISECONDS);
-            asyncMethodCounter.increment();
+            long executionTime = (endTime - startTime);
+//            asyncMethodExecutionTime.record(executionTime, TimeUnit.MILLISECONDS);
+            meterRegistry.timer(key).record(executionTime, TimeUnit.MILLISECONDS);
+//            asyncMethodCounter.increment();
         } else {
             log.info("No start time recorded for async method %s".formatted(key));
         }
